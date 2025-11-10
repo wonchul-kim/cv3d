@@ -1,0 +1,21 @@
+
+output_dir: "/ws/wonchul/HDD/etc/outputs/intelrealsense_v2"
+serial: ""
+width: 640
+height: 480
+fps: 30
+color: true
+save_color: true
+save_color_npy: false
+depth: true 
+save_depth: true
+save_depth_npy: true
+infra1: true 
+infra2: true
+save_infra: true
+save_infra_npy: true
+pointcloud: false
+save_ply: false
+
+
+bag: ""
