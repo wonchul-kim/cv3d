@@ -1,47 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-AprilTag Pose Estimation Demo (Complete, from camera to overlay)
-----------------------------------------------------------------
-
-This script detects AprilTags in a live stream (Intel RealSense D4xx color stream,
-a standard webcam, or a video file), estimates 6-DoF pose, and overlays:
+AprilTag Pose Estimation Demo Using Intel RealSense to estimate 6-DoF pose
 
 - A 3D cube on the tag
 - XYZ axes
 - The tag's (x, y, z) translation in meters in the **camera frame**
-
-It follows the approach described here:
-- https://joonhyung-lee.github.io/blog/2023/apriltag-pose-estimation/
-
-It supports two Python libraries:
-1) pupil-apriltags  (preferred; easy to install wheels)
-2) apriltag         (SWIG bindings; on some platforms you may need a compiler)
-
-The code will try pupil-apriltags first; if not available, it will fall back to apriltag.
-
-USAGE EXAMPLES
---------------
-# RealSense (D435/D455...) color stream, tag size 10 cm
-python apriltag_pose_demo.py --source realsense --tag-size 0.10
-
-# Webcam at index 0 (⚠️ needs intrinsics; provide fx,fy,cx,cy or accept rough guess)
-python apriltag_pose_demo.py --source 0 --tag-size 0.10 --fx 615 --fy 615 --cx 640 --cy 360
-
-# Video file
-python apriltag_pose_demo.py --source /path/to/video.mp4 --tag-size 0.10 --fx 615 --fy 615 --cx 640 --cy 360
-
-NOTES
------
-- tag-size is the **outer black square side length** in meters. If you print a 10 cm tag, use 0.10.
-- Coordinates shown are in the **camera coordinate system** (x right, y down, z forward).
-- For accurate scale with non‑RealSense cameras, supply calibrated intrinsics (fx, fy, cx, cy).
 - Press 'q' to quit, 's' to save a snapshot.
+
+- refer: https://joonhyung-lee.github.io/blog/2023/apriltag-pose-estimation/
 """
 import argparse
 import math
 import os
-import sys
 import time
 from dataclasses import dataclass
 from typing import List, Optional, Tuple, Union
@@ -49,10 +20,6 @@ from typing import List, Optional, Tuple, Union
 import numpy as np
 import cv2
 
-
-# -------------------------
-# Library detection wrapper
-# -------------------------
 class ATDetector:
     """
     Wrapper that uses pupil_apriltags if available, otherwise falls back to apriltag.
@@ -156,9 +123,6 @@ class ATDetector:
             raise RuntimeError("Detector not initialized")
 
 
-# ----------------------
-# Video / camera sources
-# ----------------------
 @dataclass
 class Intrinsics:
     fx: float
@@ -190,6 +154,7 @@ class RealSenseSource(FrameSource):
             import pyrealsense2 as rs  # type: ignore
         except Exception as e:
             raise RuntimeError("pyrealsense2 not installed") from e
+        
         self.rs = rs
         self.pipeline = rs.pipeline()
         self.config = rs.config()
@@ -224,7 +189,6 @@ class RealSenseSource(FrameSource):
 
     def release(self) -> None:
         self.pipeline.stop()
-
 
 
 class OpenCVSource(FrameSource):
@@ -272,9 +236,6 @@ class OpenCVSource(FrameSource):
         self.cap.release()
 
 
-# --------------
-# Draw utilities
-# --------------
 def draw_tag_outline(img: np.ndarray, corners: np.ndarray, color=(0, 255, 0), thickness: int = 2) -> None:
     pts = corners.astype(int).reshape(-1, 2)
     for i in range(4):
