@@ -1,22 +1,24 @@
 import cv2 as cv
 import numpy as np
 import glob, os, re
+import os.path as osp
 from pathlib import Path
 from tqdm import tqdm
 import os.path as osp
 
+FILE = Path(__file__).resolve()
+ROOT = FILE.parents[1]
 
 
-# ---------- 설정 ----------
+
 CHECKERBOARD = (18, 12)  # (cols, rows) 내부 코너 수
 SQUARE_SIZE_MM = 30.0    # 한 칸 길이 [mm]  -> T(번역)도 mm 단위가 됩니다.
 criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 1e-4)
 
-input_dir  = '/HDD/etc/outputs/retinify/cal_images/2'
-output_dir = '/HDD/etc/outputs/retinify/cal_results/2'
+input_dir = str(ROOT / 'data/realsense_calibration_images')
+output_dir = '/HDD/etc/outputs/cv3d/calibrator/cal'
 os.makedirs(output_dir, exist_ok=True)
 
-# 로거 설정
 import sys
 import logging
 
@@ -31,10 +33,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
-
-# ---------- 0) 안전한 좌/우 페어링 ----------
-# 아이디어: 파일명에서 공통 ID를 뽑아서 left/right를 매칭. (left/right 문자열 치환도 함께 시도)
 left_candidates  = sorted(glob.glob(os.path.join(input_dir, '*left*.png')))
 right_candidates = sorted(glob.glob(os.path.join(input_dir, '*right*.png')))
 

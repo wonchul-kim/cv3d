@@ -3,9 +3,13 @@ import numpy as np
 import glob, os
 from tqdm import tqdm
 import os.path as osp
+from pathlib import Path
+FILE = Path(__file__).resolve()
+ROOT = FILE.parents[1]
 
-input_dir  = '/HDD/etc/outputs/retinify/test/1'
-output_dir = '/HDD/etc/outputs/retinify/test/1/outputs'
+
+input_dir = str(ROOT / 'data/realsense_calibration_images')
+output_dir = '/HDD/etc/outputs/cv3d/calibrator'
 os.makedirs(output_dir, exist_ok=True)
 
 calib_info = np.load('/HDD/etc/outputs/retinify/cal_results/2/stereo_calib.npz')
