@@ -1,0 +1,17 @@
+source: realsense
+width: 640
+height: 480
+fps: 30
+families: tag36h11
+tag_size: 0.05
+fx: None
+fy: None
+cx: None
+cy: None
+
+guess_fov: 60.0 # If intrinsics are missing (non-RealSense), guess fx,fy from this horizontal FOV (deg).")
+output_dir: /wonchul/outputs/pose/pose.mp4
+decimate: 1.0 # quad_decimate parameter for the detector (trade speed/accuracy)
+headless: false 
+show_cam_info: false
+output_dir: /wonchul/outputs/pose/fp
